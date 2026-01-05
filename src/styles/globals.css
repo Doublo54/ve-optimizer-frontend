@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
 @layer base {
+  * {
+    @apply border-neutral-200;
+  }
+  
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-neutral-50 text-neutral-900 antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
   }
 }

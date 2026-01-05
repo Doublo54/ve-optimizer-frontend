@@ -10,6 +10,8 @@ export function useRealTimeSimulation() {
     selectedPools,
     poolAllocations,
     setSimulation,
+    setOptimization,
+    setMultiOptimizationResults,
     setError,
   } = useOptimizerStore();
 
@@ -24,6 +26,8 @@ export function useRealTimeSimulation() {
     },
     onSuccess: (result) => {
       setSimulation(result);
+      setOptimization(null); // Clear optimization results when running manual simulation
+      setMultiOptimizationResults([]); // Clear advanced optimization results
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : 'Simulation failed';

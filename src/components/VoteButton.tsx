@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAccount } from 'wagmi';
 import { Button } from './ui/button';
 import { Loading } from './ui/loading';
 import { useOptimizerStore } from '../stores/optimizerStore';
@@ -9,14 +10,16 @@ export const VoteButton: React.FC = () => {
   const {
     selectedPools,
     poolAllocations,
-    walletConnected,
     isVoting,
     setVoting,
     setError,
   } = useOptimizerStore();
 
+  // Check wallet connection directly from wagmi for real-time status
+  const { isConnected } = useAccount();
+
   const handleVote = async () => {
-    if (!walletConnected) {
+    if (!isConnected) {
       toast.error('Please connect your wallet first');
       return;
     }
@@ -54,23 +57,38 @@ export const VoteButton: React.FC = () => {
     }
   };
 
-  const isDisabled = !walletConnected || selectedPools.length === 0 || isVoting;
+  const isDisabled = !isConnected || selectedPools.length === 0 || isVoting;
+
+  // Determine button text and state
+  const getButtonContent = () => {
+    if (isVoting) {
+      return (
+        <>
+          <Loading size="sm" />
+          <span>Submitting Vote...</span>
+        </>
+      );
+    }
+    
+    if (!isConnected) {
+      return 'Connect Wallet to Vote';
+    }
+    
+    if (selectedPools.length === 0) {
+      return 'Select Pools to Vote';
+    }
+    
+    return `Vote for ${selectedPools.length} Pool${selectedPools.length !== 1 ? 's' : ''}`;
+  };
 
   return (
     <Button
       onClick={handleVote}
       disabled={isDisabled}
-      className="w-full"
+      className="w-full !bg-green-600 hover:!bg-green-700 !text-white disabled:!bg-neutral-300 disabled:!text-neutral-500"
       size="lg"
     >
-      {isVoting ? (
-        <div className="flex items-center space-x-2">
-          <Loading size="sm" />
-          <span>Submitting Vote...</span>
-        </div>
-      ) : (
-        `Vote for ${selectedPools.length} Pool${selectedPools.length !== 1 ? 's' : ''}`
-      )}
+      {getButtonContent()}
     </Button>
   );
 };

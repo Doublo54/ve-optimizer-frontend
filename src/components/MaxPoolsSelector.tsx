@@ -12,10 +12,10 @@ export function MaxPoolsSelector() {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium">Max Pools</label>
+    <div className="space-y-2.5">
+      <label htmlFor="max-pools" className="text-sm font-medium text-neutral-700">Max Pools</label>
       <Select value={maxPools.toString()} onValueChange={handleMaxPoolsChange}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger id="max-pools" className="w-full">
           <SelectValue placeholder="Select max pools" />
         </SelectTrigger>
         <SelectContent>
@@ -26,8 +26,8 @@ export function MaxPoolsSelector() {
           ))}
         </SelectContent>
       </Select>
-      <p className="text-xs text-muted-foreground">
-        Maximum number of pools to include in optimization
+      <p className="text-xs text-neutral-500">
+        Maximum pools for optimization
       </p>
     </div>
   );

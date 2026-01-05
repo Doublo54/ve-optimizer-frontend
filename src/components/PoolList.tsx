@@ -7,6 +7,7 @@ import { Checkbox } from './ui/checkbox';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Loading } from './ui/loading';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Ban, ChevronUp, ChevronDown } from 'lucide-react';
 
 type SortField = 'apr' | 'tvl' | 'rewards' | 'title';
@@ -37,6 +38,14 @@ export function PoolList() {
     const percentage = parseFloat(value);
     if (!isNaN(percentage) && percentage >= 0 && percentage <= 100) {
       setPoolAllocation(poolAddress, percentage);
+      
+      // Auto-select pool if percentage > 0, deselect if percentage === 0
+      const isCurrentlySelected = selectedPools.includes(poolAddress);
+      if (percentage > 0 && !isCurrentlySelected) {
+        togglePoolSelection(poolAddress);
+      } else if (percentage === 0 && isCurrentlySelected) {
+        togglePoolSelection(poolAddress);
+      }
     }
   };
 
@@ -104,103 +113,112 @@ export function PoolList() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-8">
-        <Loading text="Loading pools..." />
-      </div>
+      <Card>
+        <CardContent className="flex items-center justify-center py-12">
+          <Loading text="Loading pools..." />
+        </CardContent>
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-8 text-destructive">
-        Failed to load pools. Please try again.
-      </div>
+      <Card>
+        <CardContent className="text-center py-12 text-danger-600">
+          Failed to load pools. Please try again.
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Available Pools</h3>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Min Rewards:</label>
-            <Input
-              type="number"
-              value={minRewardsFilter}
-              onChange={(e) => setMinRewardsFilter(parseFloat(e.target.value) || 0)}
-              placeholder="0"
-              className="w-24"
-              min="0"
-              step="0.01"
-            />
+    <Card>
+      <CardHeader>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <CardTitle>Available Pools</CardTitle>
+            <CardDescription className="mt-1">Select and allocate your voting power</CardDescription>
           </div>
-          <div className="text-sm text-muted-foreground">
-            Total allocation: {totalAllocation.toFixed(1)}%
-            {totalAllocation !== 100 && (
-              <span className="text-destructive ml-1">
-                (must equal 100%)
-              </span>
-            )}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex items-center gap-2">
+              <label htmlFor="min-rewards" className="text-sm font-medium text-neutral-700 whitespace-nowrap">Min Rewards:</label>
+              <Input
+                id="min-rewards"
+                type="number"
+                value={minRewardsFilter}
+                onChange={(e) => setMinRewardsFilter(parseFloat(e.target.value) || 0)}
+                placeholder="0"
+                className="w-28"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div className="text-sm">
+              <span className="font-medium text-neutral-700">Total: {totalAllocation.toFixed(1)}%</span>
+              {totalAllocation !== 100 && (
+                <span className="text-danger-600 ml-2 font-medium">
+                  (must equal 100%)
+                </span>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-
-      <div className="border rounded-lg overflow-hidden">
+      </CardHeader>
+      <CardContent className="p-0">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-muted">
+            <thead className="bg-neutral-50 border-y border-neutral-200">
               <tr>
-                <th className="px-4 py-3 text-left text-sm font-medium">Select</th>
-                <th className="px-4 py-3 text-left text-sm font-medium">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-700 uppercase tracking-wider">Select</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-700 uppercase tracking-wider">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-auto p-0 font-medium"
+                    className="h-auto p-0 font-semibold uppercase hover:text-sky-600"
                     onClick={() => handleSort('title')}
                   >
                     Pool
-                    {getSortIcon('symbol')}
+                    {getSortIcon('title')}
                   </Button>
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-medium">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-700 uppercase tracking-wider">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-auto p-0 font-medium"
+                    className="h-auto p-0 font-semibold uppercase hover:text-sky-600"
                     onClick={() => handleSort('apr')}
                   >
                     APR
                     {getSortIcon('apr')}
                   </Button>
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-medium">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-700 uppercase tracking-wider">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-auto p-0 font-medium"
+                    className="h-auto p-0 font-semibold uppercase hover:text-sky-600"
                     onClick={() => handleSort('tvl')}
                   >
                     TVL
                     {getSortIcon('tvl')}
                   </Button>
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-medium">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-700 uppercase tracking-wider">
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-auto p-0 font-medium"
+                    className="h-auto p-0 font-semibold uppercase hover:text-sky-600"
                     onClick={() => handleSort('rewards')}
                   >
                     Rewards (24h)
                     {getSortIcon('rewards')}
                   </Button>
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-medium">Allocation %</th>
-                <th className="px-4 py-3 text-left text-sm font-medium">Actions</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-700 uppercase tracking-wider">Allocation %</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-neutral-700 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-neutral-200">
               {filteredAndSortedPools.map((pool) => {
                 const isSelected = selectedPools.includes(pool.address);
                 const isBlacklisted = blacklistedPools.has(pool.address);
@@ -208,34 +226,38 @@ export function PoolList() {
                 const totalRewards = (pool.gauge?.feeInUsd || 0) + (pool.gauge?.bribesInUsd || 0);
 
                 return (
-                  <tr key={pool.address} className="border-t hover:bg-muted/50">
-                    <td className="px-4 py-3">
+                  <tr key={pool.address} className="hover:bg-neutral-50 transition-colors">
+                    <td className="px-6 py-4">
                       <Checkbox
                         checked={isSelected}
-                        onCheckedChange={() => togglePoolSelection(pool.address)}
+                        onCheckedChange={(checked) => {
+                          if (checked !== 'indeterminate') {
+                            togglePoolSelection(pool.address);
+                          }
+                        }}
                         disabled={isBlacklisted}
                       />
                     </td>
-                    <td className="px-4 py-3">
-                      <div>
-                        <div className="font-medium">
+                    <td className="px-6 py-4">
+                      <div className="min-w-0">
+                        <div className="font-medium text-neutral-900">
                           {pool.title}
                         </div>
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-xs text-neutral-500 font-mono mt-0.5">
                           {pool.address.slice(0, 6)}...{pool.address.slice(-4)}
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4 text-sm font-medium text-neutral-900">
                       {formatPercentage(pool.gauge?.votingAprProjection || 0)}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4 text-sm text-neutral-700">
                       {formatLargeNumber(pool.gauge?.tvl || 0)}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4 text-sm font-medium text-neutral-900">
                       {formatCurrency(totalRewards)}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       <Input
                         type="number"
                         value={allocation}
@@ -243,15 +265,16 @@ export function PoolList() {
                         min="0"
                         max="100"
                         step="0.1"
-                        className="w-20"
-                        disabled={!isSelected}
+                        className="w-24"
+                        disabled={isBlacklisted}
                       />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4">
                       <Button
                         variant={isBlacklisted ? "destructive" : "outline"}
                         size="sm"
                         onClick={() => toggleBlacklist(pool.address)}
+                        className="w-9 h-9 p-0"
                       >
                         <Ban className="h-4 w-4" />
                       </Button>
@@ -262,13 +285,12 @@ export function PoolList() {
             </tbody>
           </table>
         </div>
-      </div>
-
-      {filteredAndSortedPools.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
-          {pools.length === 0 ? `No pools found for ${selectedChain}` : 'No pools match the current filters'}
-        </div>
-      )}
-    </div>
+        {filteredAndSortedPools.length === 0 && (
+          <div className="text-center py-12 text-neutral-500">
+            {pools.length === 0 ? `No pools found for ${selectedChain}` : 'No pools match the current filters'}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

@@ -185,8 +185,8 @@ export interface OptimizerState {
   togglePoolSelection: (poolAddress: string) => void;
   toggleBlacklist: (poolAddress: string) => void;
   setAllPools: (pools: Pool[]) => void;
-  setSimulation: (result: OptimizationResult) => void;
-  setOptimization: (result: OptimizationResult) => void;
+  setSimulation: (result: OptimizationResult | null) => void;
+  setOptimization: (result: OptimizationResult | null) => void;
   setMultiOptimizationResults: (results: { maxPools: number; result: OptimizationResult }[]) => void;
   setMaxPools: (maxPools: number) => void;
   setMinPools: (minPools: number) => void;

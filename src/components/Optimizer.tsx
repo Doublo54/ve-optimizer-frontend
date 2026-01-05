@@ -19,10 +19,10 @@ export function Optimizer() {
 
   return (
     <Layout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">veToken Voting Optimizer</h1>
-          <p className="text-muted-foreground">
+      <div className="space-y-8">
+        <div className="space-y-3">
+          <h1 className="text-4xl font-bold tracking-tight text-neutral-900">veToken Voting Optimizer</h1>
+          <p className="text-lg text-neutral-600 max-w-3xl leading-relaxed">
             Optimize your veToken voting power allocation across liquidity pools to maximize returns from protocol fees and external bribes.
           </p>
         </div>
@@ -38,8 +38,8 @@ export function Optimizer() {
               Select your chain and enter your voting power to get started
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4">
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <ChainSelector />
               <VotingPowerInput />
               <MaxPoolsSelector />
@@ -49,7 +49,7 @@ export function Optimizer() {
 
         <PoolList />
 
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-6">
           <AdvancedOptimizationSettings />
           <OptimizationControls />
           <div className="w-full max-w-md">

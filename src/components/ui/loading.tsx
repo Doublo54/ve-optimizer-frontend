@@ -16,8 +16,8 @@ export function Loading({ className, size = 'md', text }: LoadingProps) {
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <Loader2 className={cn('animate-spin', sizeClasses[size])} />
-      {text && <span className="text-sm">{text}</span>}
+      <Loader2 className={cn('animate-spin text-sky-600', sizeClasses[size])} />
+      {text && <span className="text-sm text-neutral-600">{text}</span>}
     </div>
   );
 }

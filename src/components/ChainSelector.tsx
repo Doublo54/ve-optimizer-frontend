@@ -21,10 +21,10 @@ export function ChainSelector() {
   const { selectedChain, setChain } = useOptimizerStore();
 
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium">Chain</label>
+    <div className="space-y-2.5">
+      <label htmlFor="chain-select" className="text-sm font-medium text-neutral-700">Chain</label>
       <Select value={selectedChain} onValueChange={(value: ChainType) => setChain(value)}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger id="chain-select" className="w-full">
           <SelectValue placeholder="Select chain" />
         </SelectTrigger>
         <SelectContent>

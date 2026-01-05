@@ -35,6 +35,8 @@ export function OptimizationControls() {
     },
     onSuccess: (result) => {
       setSimulation(result);
+      setOptimization(null); // Clear optimization results when running manual simulation
+      setMultiOptimizationResults([]); // Clear advanced optimization results
       toast.success('Simulation completed successfully');
     },
     onError: (error) => {
@@ -51,6 +53,8 @@ export function OptimizationControls() {
     },
     onSuccess: (result) => {
       setOptimization(result);
+      setSimulation(null); // Clear simulation results when running optimization
+      setMultiOptimizationResults([]); // Clear advanced optimization results
       applyOptimalAllocations(result);
       toast.success('Optimization completed successfully');
     },
@@ -134,60 +138,65 @@ export function OptimizationControls() {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4">
-      <Button
-        onClick={handleSimulate}
-        disabled={isSimulating || isOptimizing || isMultiOptimizing}
-        className="flex items-center gap-2"
-      >
-        {isSimulating ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Play className="h-4 w-4" />
-        )}
-        {isSimulating ? 'Simulating...' : 'Simulate Manual Allocation'}
-      </Button>
+    <div className="w-full max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Button
+          onClick={handleSimulate}
+          disabled={isSimulating || isOptimizing || isMultiOptimizing}
+          variant="outline"
+          size="lg"
+        >
+          {isSimulating ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <Play className="h-5 w-5" />
+          )}
+          {isSimulating ? 'Simulating...' : 'Simulate Manual Allocation'}
+        </Button>
 
-      <Button
-        onClick={handleOptimize}
-        disabled={isSimulating || isOptimizing || isMultiOptimizing}
-        variant="secondary"
-        className="flex items-center gap-2"
-      >
-        {isOptimizing ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Zap className="h-4 w-4" />
-        )}
-        {isOptimizing ? 'Optimizing...' : 'Find Optimal Allocation'}
-      </Button>
+        <Button
+          onClick={handleOptimize}
+          disabled={isSimulating || isOptimizing || isMultiOptimizing}
+          variant="default"
+          size="lg"
+        >
+          {isOptimizing ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <Zap className="h-5 w-5" />
+          )}
+          {isOptimizing ? 'Optimizing...' : 'Find Optimal Allocation'}
+        </Button>
 
-      <Button
-        onClick={handleMultiOptimize}
-        disabled={isSimulating || isOptimizing || isMultiOptimizing}
-        variant="default"
-        className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
-      >
-        {isMultiOptimizing ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <TrendingUp className="h-4 w-4" />
-        )}
-        {isMultiOptimizing ? 'Analyzing...' : `Advanced Optimization (${minPools}-${maxPoolsAdvanced} pools)`}
-      </Button>
+        <Button
+          onClick={handleMultiOptimize}
+          disabled={isSimulating || isOptimizing || isMultiOptimizing}
+          variant="default"
+          size="lg"
+          className="!bg-green-600 hover:!bg-green-700 !text-white md:col-span-2"
+        >
+          {isMultiOptimizing ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <TrendingUp className="h-5 w-5" />
+          )}
+          {isMultiOptimizing ? 'Analyzing...' : `Advanced Optimization (${minPools}-${maxPoolsAdvanced} pools)`}
+        </Button>
 
-      <Button
-        onClick={() => {
-          reset();
-          toast.success('Configuration reset');
-        }}
-        disabled={isSimulating || isOptimizing || isMultiOptimizing}
-        variant="outline"
-        className="flex items-center gap-2"
-      >
-        <RotateCcw className="h-4 w-4" />
-        Reset
-      </Button>
+        <Button
+          onClick={() => {
+            reset();
+            toast.success('Configuration reset');
+          }}
+          disabled={isSimulating || isOptimizing || isMultiOptimizing}
+          variant="outline"
+          size="lg"
+          className="md:col-span-2"
+        >
+          <RotateCcw className="h-5 w-5" />
+          Reset Configuration
+        </Button>
+      </div>
     </div>
   );
 }

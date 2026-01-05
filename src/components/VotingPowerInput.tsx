@@ -12,21 +12,22 @@ export function VotingPowerInput() {
   };
 
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium">
-        veToken Voting Power (ETH)
+    <div className="space-y-2.5">
+      <label htmlFor="voting-power" className="text-sm font-medium text-neutral-700">
+        Voting Power (ETH)
       </label>
       <Input
+        id="voting-power"
         type="number"
         value={votingPower}
         onChange={handleChange}
         min="0"
         step="0.1"
         placeholder="25.5"
-        className="w-[180px]"
+        className="w-full"
       />
-      <p className="text-xs text-muted-foreground">
-        Your locked veToken voting power in ETH
+      <p className="text-xs text-neutral-500">
+        Your locked veToken voting power
       </p>
     </div>
   );

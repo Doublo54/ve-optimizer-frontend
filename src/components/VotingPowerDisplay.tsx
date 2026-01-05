@@ -3,7 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import { useOptimizerStore } from '../stores/optimizerStore';
 import { getVotingPower } from '../utils/api';
-import { Card } from './ui/card';
+import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Loading } from './ui/loading';
 
@@ -54,41 +54,43 @@ export const VotingPowerDisplay: React.FC = () => {
   }, [isConnected, address, blockchainVotingPower, isVotingPowerLoading, setBlockchainVotingPower, setVotingPowerLoading, setVotingPower]);
 
   return (
-    <Card className="p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold mb-2">Wallet Connection</h3>
-          {!isConnected ? (
-            <div className="text-sm text-gray-600">
-              Connect your wallet to view your voting power and execute votes
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <div className="text-sm">
-                <span className="font-medium">Address:</span>{' '}
-                <span className="font-mono text-xs">
-                  {address?.slice(0, 6)}...{address?.slice(-4)}
-                </span>
-              </div>
-              <div className="text-sm">
-                <span className="font-medium">Voting Power:</span>{' '}
-                {isVotingPowerLoading ? (
-                  <Loading size="sm" />
-                ) : blockchainVotingPower ? (
-                  <span className="font-semibold text-green-600">
-                    {blockchainVotingPower.formattedPower} veTokens
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between gap-6">
+          <div className="flex-1 space-y-3">
+            <h3 className="text-base font-semibold text-neutral-900">Wallet Connection</h3>
+            {!isConnected ? (
+              <p className="text-sm text-neutral-600 leading-relaxed">
+                Connect your wallet to view your voting power and execute votes
+              </p>
+            ) : (
+              <div className="space-y-2.5">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-neutral-700">Address:</span>
+                  <span className="font-mono text-xs text-neutral-600 bg-neutral-100 px-2 py-1 rounded">
+                    {address?.slice(0, 6)}...{address?.slice(-4)}
                   </span>
-                ) : (
-                  <span className="text-gray-500">Unable to fetch</span>
-                )}
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-neutral-700">Voting Power:</span>
+                  {isVotingPowerLoading ? (
+                    <Loading size="sm" />
+                  ) : blockchainVotingPower ? (
+                    <span className="font-semibold text-green-600">
+                      {blockchainVotingPower.formattedPower} veTokens
+                    </span>
+                  ) : (
+                    <span className="text-neutral-500">Unable to fetch</span>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+          <div className="flex-shrink-0">
+            <ConnectButton />
+          </div>
         </div>
-        <div className="ml-4">
-          <ConnectButton />
-        </div>
-      </div>
+      </CardContent>
     </Card>
   );
 };

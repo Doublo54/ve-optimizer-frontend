@@ -92,11 +92,11 @@ export const useOptimizerStore = create<OptimizerState>((set, get) => ({
     set({ allPools: pools });
   },
 
-  setSimulation: (result: OptimizationResult) => {
+  setSimulation: (result: OptimizationResult | null) => {
     set({ currentSimulation: result });
   },
 
-  setOptimization: (result: OptimizationResult) => {
+  setOptimization: (result: OptimizationResult | null) => {
     set({ currentOptimization: result });
   },
 
