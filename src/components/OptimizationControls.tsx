@@ -138,7 +138,7 @@ export function OptimizationControls() {
   };
 
   return (
-    <div className="w-full max-w-4xl">
+    <div className="w-full max-w-4xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button
           onClick={handleSimulate}

@@ -1,6 +1,7 @@
 import { useOptimizerStore } from '../stores/optimizerStore';
 import { formatCurrency, formatPercentage } from '../utils/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { VoteButton } from './VoteButton';
 
 export function ResultsDisplay() {
   const { currentSimulation, currentOptimization } = useOptimizerStore();
@@ -11,31 +12,25 @@ export function ResultsDisplay() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Expected Returns</CardTitle>
+          <CardTitle>Selected Allocation</CardTitle>
           <CardDescription>
-            Select pools and set allocations to see expected returns
+            Run an optimization or simulation to see your selected allocation results
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-12 text-neutral-500">
-            No results to display yet
+            No allocation selected yet
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  const isOptimization = !!currentOptimization;
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle>
-          {isOptimization ? 'Optimized Allocation Results' : 'Manual Allocation Results'}
-        </CardTitle>
-        <CardDescription>
-          {isOptimization ? 'Mathematically optimal allocation across all pools' : 'Results from your manual pool allocations'}
-        </CardDescription>
+        <CardTitle>Selected Allocation</CardTitle>
+        <CardDescription>Your current allocation configuration</CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -90,8 +85,8 @@ export function ResultsDisplay() {
                     <td className="px-6 py-4 text-sm font-medium text-neutral-900">
                       {formatPercentage(allocation.votePercentage)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-neutral-700">
-                      {allocation.votingPower.toFixed(4)} ETH
+                    <td className="px-6 py-4 text-sm font-medium text-neutral-900">
+                      {formatPercentage(allocation.votePercentage)}
                     </td>
                     <td className="px-6 py-4">
                       <span className="text-green-700 font-semibold text-sm">
@@ -102,6 +97,13 @@ export function ResultsDisplay() {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* Execute Vote */}
+        <div className="pt-4 border-t border-neutral-200">
+          <div className="max-w-md mx-auto">
+            <VoteButton />
           </div>
         </div>
       </CardContent>

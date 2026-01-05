@@ -27,6 +27,7 @@ export function PoolList() {
   const [sortField, setSortField] = useState<SortField>('rewards');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [minRewardsFilter, setMinRewardsFilter] = useState<number>(300);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const { data: pools = [], isLoading, error } = useQuery({
     queryKey: ['pools', selectedChain],
@@ -135,9 +136,23 @@ export function PoolList() {
     <Card>
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <CardTitle>Available Pools</CardTitle>
-            <CardDescription className="mt-1">Select and allocate your voting power</CardDescription>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="h-8 w-8 p-0"
+            >
+              {isExpanded ? (
+                <ChevronDown className="h-5 w-5" />
+              ) : (
+                <ChevronUp className="h-5 w-5" />
+              )}
+            </Button>
+            <div>
+              <CardTitle>Available Pools</CardTitle>
+              <CardDescription className="mt-1">Select and allocate your voting power</CardDescription>
+            </div>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex items-center gap-2">
@@ -164,8 +179,9 @@ export function PoolList() {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="overflow-x-auto">
+      {isExpanded && (
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-neutral-50 border-y border-neutral-200">
               <tr>
@@ -284,13 +300,14 @@ export function PoolList() {
               })}
             </tbody>
           </table>
+          {filteredAndSortedPools.length === 0 && (
+            <div className="text-center py-12 text-neutral-500">
+              {pools.length === 0 ? `No pools found for ${selectedChain}` : 'No pools match the current filters'}
+            </div>
+          )}
         </div>
-        {filteredAndSortedPools.length === 0 && (
-          <div className="text-center py-12 text-neutral-500">
-            {pools.length === 0 ? `No pools found for ${selectedChain}` : 'No pools match the current filters'}
-          </div>
-        )}
       </CardContent>
+      )}
     </Card>
   );
 }

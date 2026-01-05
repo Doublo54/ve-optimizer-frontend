@@ -19,7 +19,7 @@ export function AdvancedOptimizationSettings() {
   };
 
   return (
-    <div className="w-full max-w-2xl bg-neutral-100 rounded-xl p-5">
+    <div className="w-full bg-neutral-50 rounded-lg p-5 border border-neutral-200">
       <h3 className="text-sm font-semibold text-neutral-900 mb-4">Advanced Optimization Settings</h3>
       <div className="flex flex-col sm:flex-row gap-6 items-end">
         <div className="flex flex-col gap-2.5 flex-1">

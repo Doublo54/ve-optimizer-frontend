@@ -1,5 +1,5 @@
 import { useOptimizerStore } from '../stores/optimizerStore';
-import { formatCurrency, formatLargeNumber } from '../utils/api';
+import { formatCurrency } from '../utils/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { TrendingUp, CheckCircle } from 'lucide-react';
@@ -82,7 +82,7 @@ export function MultiOptimizationResults() {
                     <td className="px-6 py-4 font-semibold text-neutral-900">{maxPools}</td>
                     <td className="px-6 py-4">
                       <div className="font-semibold text-neutral-900">
-                        {formatLargeNumber(result.totalExpectedReturn)}
+                        {formatCurrency(result.totalExpectedReturn)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-neutral-700">

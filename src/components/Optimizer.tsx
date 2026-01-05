@@ -8,7 +8,6 @@ import { ResultsDisplay } from './ResultsDisplay';
 import { ErrorDisplay } from './ErrorDisplay';
 import { MultiOptimizationResults } from './MultiOptimizationResults';
 import { VotingPowerDisplay } from './VotingPowerDisplay';
-import { VoteButton } from './VoteButton';
 import { AdvancedOptimizationSettings } from './AdvancedOptimizationSettings';
 import { useRealTimeSimulation } from '../hooks/useRealTimeSimulation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
@@ -20,6 +19,7 @@ export function Optimizer() {
   return (
     <Layout>
       <div className="space-y-8">
+        {/* Header Section */}
         <div className="space-y-3">
           <h1 className="text-4xl font-bold tracking-tight text-neutral-900">veToken Voting Optimizer</h1>
           <p className="text-lg text-neutral-600 max-w-3xl leading-relaxed">
@@ -27,39 +27,57 @@ export function Optimizer() {
           </p>
         </div>
 
+        {/* Error Display - Always visible at top for critical feedback */}
         <ErrorDisplay />
 
-        <VotingPowerDisplay />
+        {/* ========== CONFIGURATION SECTION ========== */}
+        <div className="space-y-6">
+          {/* Wallet Connection */}
+          <VotingPowerDisplay />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Configuration</CardTitle>
-            <CardDescription>
-              Select your chain and enter your voting power to get started
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <ChainSelector />
-              <VotingPowerInput />
-              <MaxPoolsSelector />
-            </div>
-          </CardContent>
-        </Card>
+          {/* Basic Configuration */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Configuration</CardTitle>
+              <CardDescription>
+                Select your chain and enter your voting power to get started
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <ChainSelector />
+                <VotingPowerInput />
+                <MaxPoolsSelector />
+              </div>
+            </CardContent>
+          </Card>
 
-        <PoolList />
+          {/* Pool Selection and Allocation */}
+          <PoolList />
 
-        <div className="flex flex-col items-center gap-6">
-          <AdvancedOptimizationSettings />
-          <OptimizationControls />
-          <div className="w-full max-w-md">
-            <VoteButton />
-          </div>
+          {/* Optimization Buttons */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Optimization</CardTitle>
+              <CardDescription>
+                Find optimal allocations or run simulations for your voting power
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <AdvancedOptimizationSettings />
+              <OptimizationControls />
+            </CardContent>
+          </Card>
         </div>
 
-        <MultiOptimizationResults />
+        {/* ========== RESULTS SECTION ========== */}
+        <div className="space-y-6 border-t border-neutral-200 pt-8">
+          {/* Advanced Optimization Comparison */}
+          <MultiOptimizationResults />
 
-        <ResultsDisplay />
+          {/* Selected Allocation Results (includes vote button) */}
+          <ResultsDisplay />
+        </div>
       </div>
     </Layout>
   );

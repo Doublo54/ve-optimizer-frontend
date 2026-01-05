@@ -27,7 +27,7 @@ export function useRealTimeSimulation() {
     onSuccess: (result) => {
       setSimulation(result);
       setOptimization(null); // Clear optimization results when running manual simulation
-      setMultiOptimizationResults([]); // Clear advanced optimization results
+      // Don't clear multiOptimizationResults here - only clear when explicitly running manual simulation
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : 'Simulation failed';

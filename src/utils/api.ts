@@ -175,8 +175,17 @@ export function validateAllocations(allocations: Record<string, number>): boolea
 
 /**
  * Format currency values for display
+ * Shows whole numbers (no cents) for values >= 1000
  */
 export function formatCurrency(value: number): string {
+  if (value >= 1000) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
