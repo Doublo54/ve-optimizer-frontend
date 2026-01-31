@@ -9,6 +9,7 @@ import { ErrorDisplay } from './ErrorDisplay';
 import { MultiOptimizationResults } from './MultiOptimizationResults';
 import { VotingPowerDisplay } from './VotingPowerDisplay';
 import { AdvancedOptimizationSettings } from './AdvancedOptimizationSettings';
+import { CurrentVoteDisplay } from './CurrentVoteDisplay';
 import { useRealTimeSimulation } from '../hooks/useRealTimeSimulation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 
@@ -34,6 +35,9 @@ export function Optimizer() {
         <div className="space-y-6">
           {/* Wallet Connection */}
           <VotingPowerDisplay />
+
+          {/* Current Vote Status */}
+          <CurrentVoteDisplay />
 
           {/* Basic Configuration */}
           <Card>

@@ -1,6 +1,6 @@
 import { Pool, OptimizationResult, SimulationRequest, ChainType, ApiError, VotingPowerInfo, HYDREX_CONTRACTS, VOTING_ESCROW_ABI, VOTER_ABI } from '../types/api';
 import { config } from '../wagmi';
-import { readContract, writeContract, getAccount } from '@wagmi/core';
+import { readContract, readContracts, writeContract, getAccount } from '@wagmi/core';
 
 // API Configuration
 const API_BASE_URL = 'http://zo440ws8gg0s08wsg4k488c8.94.130.107.60.sslip.io/';
@@ -298,4 +298,95 @@ export function isWalletConnected(): boolean {
 export function getConnectedAddress(): `0x${string}` | null {
   const account = getAccount(config);
   return account.address || null;
+}
+
+/**
+ * Get current votes for a user from the Voter contract
+ * Uses multicall to minimize on-chain calls (3 RPC calls total instead of 1 + 2N)
+ */
+export async function getCurrentVotes(userAddress: `0x${string}`): Promise<{
+  poolAddresses: string[];
+  weights: bigint[];
+  percentages: number[];
+  totalWeight: bigint;
+}> {
+  try {
+    // Step 1: Get the number of pools the user has voted for (1 call)
+    const poolVoteLength = await readContract(config, {
+      address: HYDREX_CONTRACTS.voter,
+      abi: VOTER_ABI,
+      functionName: 'poolVoteLength',
+      args: [userAddress],
+    }) as bigint;
+
+    const length = Number(poolVoteLength);
+
+    if (length === 0) {
+      return {
+        poolAddresses: [],
+        weights: [],
+        percentages: [],
+        totalWeight: BigInt(0),
+      };
+    }
+
+    // Step 2: Batch all poolVote(index) calls using multicall (1 multicall)
+    const poolVoteContracts = Array.from({ length }, (_, i) => ({
+      address: HYDREX_CONTRACTS.voter,
+      abi: VOTER_ABI,
+      functionName: 'poolVote' as const,
+      args: [userAddress, BigInt(i)] as const,
+    }));
+
+    const poolAddressResults = await readContracts(config, {
+      contracts: poolVoteContracts,
+    });
+
+    const poolAddresses = poolAddressResults
+      .map(result => result.status === 'success' ? result.result as string : null)
+      .filter((addr): addr is string => addr !== null);
+
+    if (poolAddresses.length === 0) {
+      return {
+        poolAddresses: [],
+        weights: [],
+        percentages: [],
+        totalWeight: BigInt(0),
+      };
+    }
+
+    // Step 3: Batch all votes(userAddress, poolAddress) calls using multicall (1 multicall)
+    const votesContracts = poolAddresses.map(poolAddr => ({
+      address: HYDREX_CONTRACTS.voter,
+      abi: VOTER_ABI,
+      functionName: 'votes' as const,
+      args: [userAddress, poolAddr as `0x${string}`] as const,
+    }));
+
+    const votesResults = await readContracts(config, {
+      contracts: votesContracts,
+    });
+
+    const weights = votesResults.map(result => 
+      result.status === 'success' ? result.result as bigint : BigInt(0)
+    );
+
+    // Calculate total weight from individual votes
+    const totalWeight = weights.reduce((sum, w) => sum + w, BigInt(0));
+
+    // Convert to percentages
+    const percentages = weights.map(weight => {
+      if (totalWeight === BigInt(0)) return 0;
+      return (Number(weight) / Number(totalWeight)) * 100;
+    });
+
+    return {
+      poolAddresses,
+      weights,
+      percentages,
+      totalWeight,
+    };
+  } catch (error) {
+    throw new ApiError(`Failed to get current votes: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 }
