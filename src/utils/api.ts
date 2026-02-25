@@ -3,7 +3,7 @@ import { config } from '../wagmi';
 import { readContract, readContracts, writeContract, getAccount } from '@wagmi/core';
 
 // API Configuration
-const API_BASE_URL = 'http://zo440ws8gg0s08wsg4k488c8.94.130.107.60.sslip.io/';
+const API_BASE_URL = 'https://ve-api.timolapre.com';
 const HYDREX_API_URL = 'https://api.hydrex.fi/strategies';
 
 /**
